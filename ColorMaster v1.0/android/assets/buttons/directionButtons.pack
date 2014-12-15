@@ -1,0 +1,61 @@
+
+directionButtons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+buttonDown
+  rotate: false
+  xy: 1, 198
+  size: 194, 195
+  orig: 194, 195
+  offset: 0, 0
+  index: -1
+buttonDown_flipped
+  rotate: false
+  xy: 1, 1
+  size: 194, 195
+  orig: 194, 195
+  offset: 0, 0
+  index: -1
+buttonLeft
+  rotate: false
+  xy: 197, 200
+  size: 195, 193
+  orig: 195, 193
+  offset: 0, 0
+  index: -1
+buttonLeft_flipped
+  rotate: false
+  xy: 197, 5
+  size: 195, 193
+  orig: 195, 193
+  offset: 0, 0
+  index: -1
+buttonUp
+  rotate: false
+  xy: 394, 199
+  size: 193, 194
+  orig: 193, 194
+  offset: 0, 0
+  index: -1
+buttonUp_flipped
+  rotate: false
+  xy: 589, 199
+  size: 193, 194
+  orig: 193, 194
+  offset: 0, 0
+  index: -1
+buttonRight
+  rotate: false
+  xy: 394, 5
+  size: 191, 192
+  orig: 191, 192
+  offset: 0, 0
+  index: -1
+buttonRight_flipped
+  rotate: false
+  xy: 784, 201
+  size: 191, 192
+  orig: 191, 192
+  offset: 0, 0
+  index: -1
