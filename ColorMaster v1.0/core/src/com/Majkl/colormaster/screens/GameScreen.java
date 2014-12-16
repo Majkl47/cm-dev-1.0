@@ -29,6 +29,7 @@ public class GameScreen implements Screen {
 	public static final int START_Y = Gdx.graphics.getHeight() / 8;
 	
 	private boolean called = false;
+	private boolean restart;
 	
 	private Game game;
 	
@@ -39,7 +40,7 @@ public class GameScreen implements Screen {
 	private Items currentItems;	
 	private Levels levels;
 	private Saves saves;
-	private int fieldLength;
+	private int fieldLength, maxLevel;
 	
 	private Texture player, field, drop, gate, finish;
 	private SpriteBatch batch;
@@ -116,7 +117,7 @@ public class GameScreen implements Screen {
 		tempItems = saves.loadGame();
 
 		
-		if(tempItems == null){
+		if(tempItems == null || restart){
 			currentItems = levels.select(1);
 			currentItems.setCurrentLevel(1);
 			currentItems.setPlayer(position, -1);
@@ -146,19 +147,6 @@ public class GameScreen implements Screen {
 		plex.addProcessor(processor);
 		Gdx.input.setInputProcessor(plex);
 
-//		saveGame();
-
-	}
-	
-	public void saveGame() {
-		// testing, for deletion
-		try {
-			saves.saveGame(currentItems);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 	
 	@Override
@@ -245,17 +233,31 @@ public class GameScreen implements Screen {
 		if (pauseMenu.isOpen()) {
 			pauseMenu.render();
 		} else {
+			restart = false;
 			switch(pauseMenu.getEventCode()) {
 			case 1:
 				Gdx.input.setInputProcessor(plex);
 				break;
 			case 2:
+				restart = true;
+				game.setScreen(this);
 				break;
 			case 3:
 				game.setScreen(levelScreen);
+				
+				try {
+					saves.saveGame(currentItems);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
 			case 4:
 				game.setScreen(mainMenu);
+				try {
+					saves.saveGame(currentItems);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 		}

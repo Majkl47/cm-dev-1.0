@@ -1,7 +1,6 @@
 package com.Majkl.colormaster.utils;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -16,19 +15,13 @@ public class Saves {
 		json = new Json();
 	}
 	
-	public void saveGame(Items items) throws IOException{
+	public void saveGame(Items items) throws IOException {
 		FileHandle file = Gdx.files.local("data.dat");
 						
 		String itemsString = json.toJson(items);
 		
-		OutputStream out = null;
-		try{
-			file.writeString(Base64Coder.encodeString(itemsString), false);
-		} catch(Exception ex){
-			System.out.println(ex.toString());
-		} finally{
-			if(out != null) try{ out.close();} catch(Exception ex){};
-		}
+		file.writeString(Base64Coder.encodeString(itemsString), false);
+
 
 		System.out.println("Saving Game....");		
 	}
@@ -42,6 +35,21 @@ public class Saves {
 		System.out.println("Loading Game....");
 		return items;
 		
+	}
+	
+	public void saveMaxLevel(int value) {
+		FileHandle file = Gdx.files.local("data2.dat");
+			
+		file.writeString(Base64Coder.encodeString(json.toJson(value)), false);
+		
+		System.out.println("Saving MaxLevel....");
+		
+	}
+	
+	public int loadMaxLevel() {
+		FileHandle file = Gdx.files.local("data2.dat");
+		if (!file.exists()) return 0;
+		return (int) json.fromJson(Integer.class, Base64Coder.decodeString(file.readString()));
 	}
 
 }
