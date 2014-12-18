@@ -1,7 +1,8 @@
 package com.Majkl.colormaster.screens;
 
 import com.Majkl.colormaster.utils.MyButton;
-import com.Majkl.colormaster.utils.MyChangeScreenListener;
+import com.Majkl.colormaster.utils.MyScreenListener;
+import com.Majkl.colormaster.utils.Saves;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,6 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class MainMenu implements Screen {
+	
+	private static int maxLevel;
+	private static int currentLevel;
+	private Saves saves;
 	
 	private Game game;
 	
@@ -49,6 +54,9 @@ public class MainMenu implements Screen {
 		gameScreen = new GameScreen(game);
 		levelScreen = new LevelScreen(game);
 		
+		saves = new Saves();
+		maxLevel = saves.loadMaxLevel();
+		
 		backgroundTexture = new Texture(Gdx.files.internal("background.png"));
 		background = new Image(backgroundTexture);
 		
@@ -74,7 +82,7 @@ public class MainMenu implements Screen {
 		
 		stage.addActor(buttonContinue);
 		
-		buttonContinue.addListener(new MyChangeScreenListener(buttonContinue, game, gameScreen));
+		buttonContinue.addListener(new MyScreenListener(buttonContinue, game, gameScreen));
 		
 	
 		/**
@@ -84,7 +92,7 @@ public class MainMenu implements Screen {
 		
 		stage.addActor(buttonNewGame);
 		
-		buttonNewGame.addListener(new MyChangeScreenListener(buttonNewGame, game, gameScreen));
+		buttonNewGame.addListener(new MyScreenListener(buttonNewGame, game, gameScreen));
 	
 		
 		/**
@@ -94,7 +102,11 @@ public class MainMenu implements Screen {
 		
 		stage.addActor(buttonLevels);
 				
-		buttonLevels.addListener(new MyChangeScreenListener(buttonLevels, game, levelScreen));
+		buttonLevels.addListener(new MyScreenListener(buttonLevels, game, levelScreen));
+		
+		//BUTTON DEL
+		//for testing purposes
+		//it will erase file "data.dat"
 		
 		buttonDel = new MyButton("DEL", buttonStyle_gen, 3.5f, 8, 7);
 		
@@ -113,13 +125,22 @@ public class MainMenu implements Screen {
 					if (file.exists()) {
 						file.delete();
 					}
+					file = Gdx.files.local("data2.dat");
+					if (file.exists()) {
+						file.delete();
+					}
 			}
 		});
-		
-		
-		
-		
+	
 		Gdx.input.setInputProcessor(stage);
+	}
+
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.act();
+		stage.draw();
 		
 		FileHandle file = Gdx.files.local("data.dat");
 		if(!file.exists()){
@@ -129,15 +150,6 @@ public class MainMenu implements Screen {
 			buttonContinue.setVisible(true);
 			buttonNewGame.setVisible(false);
 		}
-		
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act();
-		stage.draw();
 		
 		
 	}
@@ -176,6 +188,30 @@ public class MainMenu implements Screen {
 		buttonAtlas_gen.dispose();
 		skin_gen.dispose();
 		backgroundTexture.dispose();
+	}
+
+
+	//GETTERS AND SETTERS
+	public static int getMaxLevel() {
+		return maxLevel;
+	}
+
+
+
+	public static void setMaxLevel(int maxLevel) {
+		MainMenu.maxLevel = maxLevel;
+	}
+
+
+
+	public static int getCurrentLevel() {
+		return currentLevel;
+	}
+
+
+
+	public static void setCurrentLevel(int currentLevel) {
+		MainMenu.currentLevel = currentLevel;
 	}
 
 }

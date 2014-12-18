@@ -36,6 +36,17 @@ public class Items {
 		return gameMap[x][y];
 	}
 	
+	public Vector2 getValuePosition(int value) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (gameMap[i][j] == value) {
+					return new Vector2(i,j);
+				}
+			}
+		}
+		return null;
+	}
+	
 	public int[][] getMap() {
 		return gameMap;
 	}

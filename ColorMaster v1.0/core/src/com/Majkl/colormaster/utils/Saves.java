@@ -22,7 +22,6 @@ public class Saves {
 		
 		file.writeString(Base64Coder.encodeString(itemsString), false);
 
-
 		System.out.println("Saving Game....");		
 	}
 	
@@ -48,7 +47,10 @@ public class Saves {
 	
 	public int loadMaxLevel() {
 		FileHandle file = Gdx.files.local("data2.dat");
-		if (!file.exists()) return 0;
+		if (!file.exists()) return 1;
+		
+		System.out.println("Loading maxLevel....");
+		
 		return (int) json.fromJson(Integer.class, Base64Coder.decodeString(file.readString()));
 	}
 

@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 	private Items currentItems;	
 	private Levels levels;
 	private Saves saves;
-	private int fieldLength, maxLevel;
+	private int fieldLength;
 	
 	private Texture player, field, drop, gate, finish;
 	private SpriteBatch batch;
@@ -115,17 +115,26 @@ public class GameScreen implements Screen {
 		position = new Vector2(START_X, START_Y);
 		Items tempItems = null;
 		tempItems = saves.loadGame();
+		
 
 		
-		if(tempItems == null || restart){
+		if(tempItems == null) {
 			currentItems = levels.select(1);
 			currentItems.setCurrentLevel(1);
+			MainMenu.setCurrentLevel(1);
 			currentItems.setPlayer(position, -1);
+			
+		} else if (restart) {
+			currentItems = levels.select(MainMenu.getCurrentLevel());
+			currentItems.setPlayer(position, -1);
+			currentItems.setCurrentLevel(MainMenu.getCurrentLevel());
+						
 		} else {
 			currentItems = levels.select(tempItems.getCurrentLevel());
 			currentItems.setPlayer(tempItems.getPlayerPosition(), tempItems.getPlayerColor());
 			position = tempItems.getPlayerPosition();
 			currentItems.setCurrentLevel(tempItems.getCurrentLevel());
+			MainMenu.setCurrentLevel(tempItems.getCurrentLevel());
 			currentItems.copyArray(tempItems.getMap());
 		}
 		
@@ -154,10 +163,36 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		
-		
 		stage.act();
 		stage.draw();
+		
+
+		if ((currentItems.getPlayerPosition().x - START_X) / fieldLength == currentItems.getValuePosition(4).x &&
+				(currentItems.getPlayerPosition().y - START_Y) / fieldLength == currentItems.getValuePosition(4).y) {
+			MainMenu.setCurrentLevel(MainMenu.getCurrentLevel() + 1);
+			currentItems.setCurrentLevel(MainMenu.getCurrentLevel());
+			
+			if (Levels.LEVELS_MAX < MainMenu.getCurrentLevel()) {
+				//switch to ending screen
+				System.out.println("Ending screen");
+			} else {
+				if (MainMenu.getCurrentLevel() > MainMenu.getMaxLevel()) {
+					MainMenu.setMaxLevel(currentItems.getCurrentLevel());
+					saves.saveMaxLevel(currentItems.getCurrentLevel());
+				}
+
+				try {
+					saves.saveGame(currentItems);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				restart = true;
+				game.setScreen(this);
+
+				
+			}
+		}
 		
 		processor.update(currentItems.getPlayerPosition());
 		
@@ -244,11 +279,11 @@ public class GameScreen implements Screen {
 				break;
 			case 3:
 				game.setScreen(levelScreen);
-				
+
 				try {
 					saves.saveGame(currentItems);
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 				break;
 			case 4:
@@ -301,6 +336,18 @@ public class GameScreen implements Screen {
 	public boolean isCalled() {
 		return called;
 	}
+
+
+	public void setRestart(boolean restart) {
+		this.restart = restart;
+	}
+		
+	public int getCurrentLevel() {
+		return currentItems.getCurrentLevel();
+	}
 	
-	
+	public void setCurrentLevel(int level) {
+		currentItems.setCurrentLevel(level);
+	}
+
 }
