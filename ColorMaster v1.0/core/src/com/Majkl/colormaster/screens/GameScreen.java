@@ -3,12 +3,14 @@ package com.Majkl.colormaster.screens;
 import java.io.IOException;
 
 import com.Majkl.colormaster.utils.Items;
+import com.Majkl.colormaster.utils.Levels;
 import com.Majkl.colormaster.utils.MyButton;
 import com.Majkl.colormaster.utils.MyColor;
 import com.Majkl.colormaster.utils.MyInputProcessor;
 import com.Majkl.colormaster.utils.Saves;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,11 +27,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class GameScreen implements Screen {
 	
-	public static final int START_X = Gdx.graphics.getWidth() / 8; 
-	public static final int START_Y = Gdx.graphics.getHeight() / 8;
+	public static final int W = Gdx.graphics.getWidth();
+	public static final int H = Gdx.graphics.getHeight();
+	public static final int START_X = W / 8; 
+	public static final int START_Y = H / 8;
 	
 	private boolean called = false;
 	private boolean restart;
+	private boolean backKeyPressed = false;
+	private static boolean backKeyReleased = false, pauseBackKeyPressed = false;
 	
 	private Game game;
 	
@@ -69,6 +75,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCatchBackKey(true);
 		
 		called = true;
+		backKeyPressed = false;
 		
 		pauseMenu = new PauseMenu();
 		levelScreen = new LevelScreen(game);
@@ -93,8 +100,7 @@ public class GameScreen implements Screen {
 		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
 		buttonStyle_gen.font = font_gen;
 		
-		buttonPause = new MyButton("PAUSE", buttonStyle_gen, 12, 8, 1);
-		buttonPause.setPosition(10, Gdx.graphics.getHeight() - (buttonPause.getHeight() + 10));
+		buttonPause = new MyButton("PAUSE", buttonStyle_gen, W / 12,H / 8, 10, H - ((H / 8) + 10));
 		buttonPause.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -102,17 +108,17 @@ public class GameScreen implements Screen {
 			}
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				if(Gdx.input.getX() >= buttonPause.getX() && Gdx.input.getX() < buttonPause.getX() + buttonPause.getWidth() && (Gdx.graphics.getHeight() - 
-						Gdx.input.getY()) >= buttonPause.getY() && (Gdx.graphics.getHeight() - Gdx.input.getY()) < buttonPause.getY() + buttonPause.getHeight()) {
+				if(Gdx.input.getX() >= buttonPause.getX() && Gdx.input.getX() < buttonPause.getX() + buttonPause.getWidth() && (H - 
+						Gdx.input.getY()) >= buttonPause.getY() && (H - Gdx.input.getY()) < buttonPause.getY() + buttonPause.getHeight()) {
 					pauseMenu.setOpen(true);
 				}
 			}
 		});
 		stage.addActor(buttonPause);
 		
+
 		levels = new Levels();
 		saves = new Saves();
-		position = new Vector2(START_X, START_Y);
 		Items tempItems = null;
 		tempItems = saves.loadGame();
 		
@@ -120,12 +126,18 @@ public class GameScreen implements Screen {
 		
 		if(tempItems == null) {
 			currentItems = levels.select(1);
+			computeGameplan();
+			position = currentItems.getStartPosition().scl(fieldLength);
+			position.add(START_X, START_Y);
 			currentItems.setCurrentLevel(1);
 			MainMenu.setCurrentLevel(1);
 			currentItems.setPlayer(position, -1);
 			
 		} else if (restart) {
 			currentItems = levels.select(MainMenu.getCurrentLevel());
+			computeGameplan();
+			position = currentItems.getStartPosition().scl(fieldLength);
+			position.add(START_X, START_Y);
 			currentItems.setPlayer(position, -1);
 			currentItems.setCurrentLevel(MainMenu.getCurrentLevel());
 						
@@ -136,9 +148,9 @@ public class GameScreen implements Screen {
 			currentItems.setCurrentLevel(tempItems.getCurrentLevel());
 			MainMenu.setCurrentLevel(tempItems.getCurrentLevel());
 			currentItems.copyArray(tempItems.getMap());
+			computeGameplan();
 		}
 		
-		computeGameplan();
 		
 		processor = new MyInputProcessor(fieldLength, position);
 		
@@ -166,6 +178,20 @@ public class GameScreen implements Screen {
 		stage.act();
 		stage.draw();
 		
+		if (Gdx.input.isKeyPressed(Keys.BACK) && !backKeyPressed && !pauseBackKeyPressed && !pauseMenu.isOpen()) {
+			backKeyReleased = false;
+			backKeyPressed = true;
+			pauseMenu.setOpen(true);
+		} 
+		
+		if ((pauseMenu.isOpen() || backKeyPressed) && !Gdx.input.isKeyPressed(Keys.BACK)) {
+			backKeyReleased = true;
+		} 
+		
+		if (pauseBackKeyPressed && !Gdx.input.isKeyPressed(Keys.BACK)) {
+			pauseBackKeyPressed = false;
+		}
+		
 
 		if ((currentItems.getPlayerPosition().x - START_X) / fieldLength == currentItems.getValuePosition(4).x &&
 				(currentItems.getPlayerPosition().y - START_Y) / fieldLength == currentItems.getValuePosition(4).y) {
@@ -184,7 +210,6 @@ public class GameScreen implements Screen {
 				try {
 					saves.saveGame(currentItems);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				restart = true;
@@ -268,6 +293,7 @@ public class GameScreen implements Screen {
 		if (pauseMenu.isOpen()) {
 			pauseMenu.render();
 		} else {
+			backKeyPressed = false;
 			restart = false;
 			switch(pauseMenu.getEventCode()) {
 			case 1:
@@ -295,7 +321,9 @@ public class GameScreen implements Screen {
 				}
 				break;
 			}
+
 		}
+		
 		
 	}
 	
@@ -325,9 +353,9 @@ public class GameScreen implements Screen {
 	}
 	
 	public void computeGameplan() {
-		fieldLength = (Gdx.graphics.getHeight() - (2 * START_Y)) / currentItems.getHeight();
-		if (fieldLength * currentItems.getWidth() > Gdx.graphics.getWidth() - (2 * START_X)) {
-			fieldLength = (Gdx.graphics.getWidth() - (2 * START_X)) / currentItems.getWidth(); 
+		fieldLength = (H - (2 * START_Y)) / currentItems.getHeight();
+		if (fieldLength * currentItems.getWidth() > W - (2 * START_X)) {
+			fieldLength = (W - (2 * START_X)) / currentItems.getWidth(); 
 		}
 	}
 
@@ -348,6 +376,26 @@ public class GameScreen implements Screen {
 	
 	public void setCurrentLevel(int level) {
 		currentItems.setCurrentLevel(level);
+	}
+
+
+	public  boolean isBackKeyPressed() {
+		return backKeyPressed;
+	}
+
+
+	public void setBackKeyPressed(boolean backKeyPressed) {
+		this.backKeyPressed = backKeyPressed;
+	}
+
+
+	public static boolean isBackKeyReleased() {
+		return backKeyReleased;
+	}
+
+
+	public static void setPauseBackKeyPressed(boolean pauseBackKeyPressed) {
+		GameScreen.pauseBackKeyPressed = pauseBackKeyPressed;
 	}
 
 }
