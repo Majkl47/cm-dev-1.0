@@ -5,7 +5,6 @@ import com.Majkl.colormaster.utils.MyListener;
 import com.Majkl.colormaster.utils.MyScreenListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,8 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class LevelScreen implements Screen {
 
-	public static final int W = Gdx.graphics.getWidth();
-	public static final int H = Gdx.graphics.getHeight();
 	private boolean called = false;
 	
 	
@@ -66,7 +63,8 @@ public class LevelScreen implements Screen {
 		/**
 		 * BUTTON MENU DECLARATION
 		 */
-		buttonMenu = new MyButton("MENU", buttonStyle_gen, W / 12, H / 8, 10, H - ((H / 8) + 10));
+		buttonMenu = new MyButton("MENU", buttonStyle_gen, 12, 8, 1);
+		buttonMenu.setPosition(10, Gdx.graphics.getHeight() - (buttonMenu.getHeight() + 10));
 		
 		stage.addActor(buttonMenu);
 		
@@ -76,7 +74,9 @@ public class LevelScreen implements Screen {
 		/**
 		 * BUTTON 1. LEVEL DECLARATION
 		 */
-		button1= new MyButton("1", buttonStyle_gen,H / 8, H / 8, GameScreen.START_X, H - (H * 5) / 16);
+		button1= new MyButton("1", buttonStyle_gen, 8, 8, 8);
+		button1.setWidth(button1.getHeight());
+		button1.setPosition(GameScreen.START_X, Gdx.graphics.getHeight() - button1.getHeight() * 5 / 2);
 		
 		stage.addActor(button1);
 		
@@ -87,8 +87,10 @@ public class LevelScreen implements Screen {
 		 * BUTTON 2. LEVEL DECLARATION
 		 */
 
-		button2 = new MyButton("2", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) / 16, H - (H * 5) / 16);
-
+		button2 = new MyButton("2", buttonStyle_gen, 3.5f, 8, 5.5f);
+		button2.setWidth(button2.getHeight());
+		button2.setPosition(GameScreen.START_X + button2.getWidth() * 3 / 2, Gdx.graphics.getHeight() - button2.getHeight() * 5 / 2);
+		
 		stage.addActor(button2);
 				
 		button2.addListener(new MyListener(button2, game, gameScreen, true, 2));
@@ -108,10 +110,6 @@ public class LevelScreen implements Screen {
 		
 		stage.act();
 		stage.draw();
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
-			game.setScreen(mainMenu);
-		}
 	}
 
 	
