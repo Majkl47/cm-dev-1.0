@@ -8,6 +8,7 @@ public class Items {
 	private transient int[][] dropsColor; 
 	private transient int width;
 	private transient int height;
+	private transient Vector2 startPosition;
 	private int[][] gameMap;
 	private Vector2 playerPosition;
 	private int playerColor;
@@ -128,5 +129,13 @@ public class Items {
 				gameMap[i][j] = tempArray[i][j];
 			}
 		}
+	}
+
+	public Vector2 getStartPosition() {
+		return startPosition;
+	}
+
+	public void setStartPosition(Vector2 startPosition) {
+		this.startPosition = startPosition;
 	}
 }
