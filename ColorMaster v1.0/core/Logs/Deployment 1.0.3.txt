@@ -1,0 +1,5 @@
+- Implementation of saving when leaving game via built-in buttons
+- Updated BACK button functionality on LevelScreen -> MainMenu
+- More efficient search for value in Items
+- Updated Levels
+- Implementation of EndScreen and its mechanism

@@ -18,7 +18,9 @@ public class LevelScreen implements Screen {
 
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
+	
 	private boolean called = false;
+	private static boolean backKeyPressed = false;
 	
 	
 	private Game game;
@@ -32,7 +34,7 @@ public class LevelScreen implements Screen {
 	private Skin skin_gen;
 	private BitmapFont font_gen;
 	private TextButtonStyle buttonStyle_gen;
-	private MyButton buttonMenu, button1, button2;
+	private MyButton buttonMenu, button1, button2, button3, button4;
 	
 	
 	public LevelScreen(Game game) {
@@ -96,6 +98,32 @@ public class LevelScreen implements Screen {
 		if(MainMenu.getMaxLevel() >= 2) button2.setVisible(true);
 		else button2.setVisible(false);
 		
+		/**
+		 * BUTTON 3. LEVEL DECLARATION
+		 */
+
+		button3 = new MyButton("3", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 2 / 16, H - (H * 5) / 16);
+
+		stage.addActor(button3);
+				
+		button3.addListener(new MyListener(button3, game, gameScreen, true, 3));
+		
+		if(MainMenu.getMaxLevel() >= 3) button3.setVisible(true);
+		else button3.setVisible(false);
+		
+		/**
+		 * BUTTON 4. LEVEL DECLARATION
+		 */
+
+		button4 = new MyButton("4", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 3 / 16, H - (H * 5) / 16);
+
+		stage.addActor(button4);
+				
+		button4.addListener(new MyListener(button4, game, gameScreen, true, 4));
+		
+		if(MainMenu.getMaxLevel() >= 4) button4.setVisible(true);
+		else button4.setVisible(false);
+		
 		Gdx.input.setInputProcessor(stage);
 		
 	}
@@ -110,6 +138,7 @@ public class LevelScreen implements Screen {
 		stage.draw();
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+			backKeyPressed = true;
 			game.setScreen(mainMenu);
 		}
 	}
@@ -148,6 +177,16 @@ public class LevelScreen implements Screen {
 	//GETTERS AND SETTERS
 	public boolean isCalled() {
 		return called;
+	}
+
+
+	public static boolean isBackKeyPressed() {
+		return backKeyPressed;
+	}
+
+
+	public static void setBackKeyPressed(boolean backKeyPressed) {
+		LevelScreen.backKeyPressed = backKeyPressed;
 	}
 
 }

@@ -1,0 +1,7 @@
+- Implementation of maxLevel loading and saving
+- Implementation of LevelScreen
+- Restart functionality updated
+- Implementation of switching levels
+- Deleted class MyChangeScreenListener from utils
+- Added classes MyListener and MyScreenListener
+- Updated levels (lvl1 changed, lvl2 added)

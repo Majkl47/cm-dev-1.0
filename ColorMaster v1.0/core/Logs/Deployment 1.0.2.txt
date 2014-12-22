@@ -1,0 +1,4 @@
+- Implementation of customizable starting point
+- Partial refactor of buttons implementation
+- Implementation of BACK key functionality on GameScreen, PauseMenu, MainMenu, LevelScreen
+- Implementation of dialog window on exit

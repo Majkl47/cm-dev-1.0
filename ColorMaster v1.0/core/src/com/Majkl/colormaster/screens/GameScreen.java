@@ -175,8 +175,6 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		stage.act();
-		stage.draw();
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK) && !backKeyPressed && !pauseBackKeyPressed && !pauseMenu.isOpen()) {
 			backKeyReleased = false;
@@ -192,15 +190,22 @@ public class GameScreen implements Screen {
 			pauseBackKeyPressed = false;
 		}
 		
-
+		
 		if ((currentItems.getPlayerPosition().x - START_X) / fieldLength == currentItems.getValuePosition(4).x &&
 				(currentItems.getPlayerPosition().y - START_Y) / fieldLength == currentItems.getValuePosition(4).y) {
 			MainMenu.setCurrentLevel(MainMenu.getCurrentLevel() + 1);
 			currentItems.setCurrentLevel(MainMenu.getCurrentLevel());
-			
 			if (Levels.LEVELS_MAX < MainMenu.getCurrentLevel()) {
-				//switch to ending screen
-				System.out.println("Ending screen");
+				currentItems.setPlayer(position, -1);
+				MainMenu.setCurrentLevel(MainMenu.getCurrentLevel() - 2);
+				currentItems.setCurrentLevel(MainMenu.getCurrentLevel());
+				try {
+					saves.saveGame(currentItems);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				game.setScreen(new EndScreen(game));
 			} else {
 				if (MainMenu.getCurrentLevel() > MainMenu.getMaxLevel()) {
 					MainMenu.setMaxLevel(currentItems.getCurrentLevel());
@@ -218,6 +223,9 @@ public class GameScreen implements Screen {
 				
 			}
 		}
+		
+		stage.act();
+		stage.draw();
 		
 		processor.update(currentItems.getPlayerPosition());
 		
@@ -242,8 +250,15 @@ public class GameScreen implements Screen {
 				break;
 			case 3:
 				if (currentItems.getPlayerColor() != currentItems.getDropColor(positionX, positionY)) {
-					currentItems.setPlayerColor(currentItems.getDropColor(positionX, positionY));
-					currentItems.deleteItem(positionX, positionY);
+					if (currentItems.getPlayerColor() != (-1)) {
+						if (color.mixer(currentItems.getPlayerColor(), currentItems.getDropColor(positionX, positionY)) != currentItems.getPlayerColor()) {
+							currentItems.setPlayerColor(color.mixer(currentItems.getPlayerColor(), currentItems.getDropColor(positionX, positionY)));
+							currentItems.deleteItem(positionX, positionY);
+						}
+					} else {
+						currentItems.setPlayerColor(currentItems.getDropColor(positionX, positionY));
+						currentItems.deleteItem(positionX, positionY);
+					}
 				}
 				break;
 			case 4:
@@ -336,7 +351,13 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void pause() {}
+	public void pause() {
+		try {
+			saves.saveGame(currentItems);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void resume() {}

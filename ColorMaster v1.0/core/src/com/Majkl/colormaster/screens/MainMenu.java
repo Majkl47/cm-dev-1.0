@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -171,7 +172,11 @@ public class MainMenu implements Screen {
 			buttonNewGame.setVisible(false);
 		}
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.BACK) && !backKeyPressed){
+		if (LevelScreen.isBackKeyPressed() && !Gdx.input.isKeyPressed(Keys.BACK)) {
+			LevelScreen.setBackKeyPressed(false);
+		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.BACK) && !backKeyPressed && !LevelScreen.isBackKeyPressed()){
 			backKeyPressed = true;
 			new Dialog("CONFIRM EXIT", skin_gen){
 				{
