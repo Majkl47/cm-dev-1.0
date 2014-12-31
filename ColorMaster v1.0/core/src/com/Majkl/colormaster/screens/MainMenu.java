@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 
 public class MainMenu implements Screen {
 	
+	//Dimensions Shortcuts
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
 	
@@ -96,9 +97,7 @@ public class MainMenu implements Screen {
 		skin_gen.add("default", new LabelStyle(dialogFont, Color.BLUE));
 		skin_gen.add("default", buttonStyle_gen);
 		
-		/**
-		 * BUTTON CONTINUE DECLARATION
-		 */
+		//BUTTON CONTINUE DECLARATION
 		buttonContinue = new MyButton("CONTINUE", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H -  (H / 8) * 4);
 		
 		stage.addActor(buttonContinue);
@@ -106,9 +105,7 @@ public class MainMenu implements Screen {
 		buttonContinue.addListener(new MyScreenListener(buttonContinue, game, gameScreen));
 		
 	
-		/**
-		 * BUTTON NEW GAME DECLARATION
-		 */
+		//BUTTON NEW GAME DECLARATION
 		buttonNewGame = new MyButton("NEW GAME", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 4);
 		
 		stage.addActor(buttonNewGame);
@@ -116,20 +113,18 @@ public class MainMenu implements Screen {
 		buttonNewGame.addListener(new MyScreenListener(buttonNewGame, game, gameScreen));
 	
 		
-		/**
-		 * BUTTON SELECT LEVEL DECLARATION
-		 */
+		//BUTTON SELECT LEVEL DECLARATION
 		buttonLevels = new MyButton("SELECT LEVEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 5.5f);
 		
 		stage.addActor(buttonLevels);
 				
 		buttonLevels.addListener(new MyScreenListener(buttonLevels, game, levelScreen));
 		
+	
 		//BUTTON DEL
 		//for testing purposes
 		//it will erase file "data.dat"
-		
-		buttonDel = new MyButton("DEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 7);
+			buttonDel = new MyButton("DEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 7);
 		
 		stage.addActor(buttonDel);
 		
@@ -163,6 +158,7 @@ public class MainMenu implements Screen {
 		stage.act();
 		stage.draw();
 		
+		//Check for previous saves, shows appropriate button
 		FileHandle file = Gdx.files.local("data.dat");
 		if(!file.exists()){
 			buttonContinue.setVisible(false);
@@ -172,10 +168,11 @@ public class MainMenu implements Screen {
 			buttonNewGame.setVisible(false);
 		}
 		
+		//BACK KEY functionality
 		if (LevelScreen.isBackKeyPressed() && !Gdx.input.isKeyPressed(Keys.BACK)) {
 			LevelScreen.setBackKeyPressed(false);
 		}
-		
+			//Dialog Window implementation
 		if(Gdx.input.isKeyPressed(Input.Keys.BACK) && !backKeyPressed && !LevelScreen.isBackKeyPressed()){
 			backKeyPressed = true;
 			new Dialog("CONFIRM EXIT", skin_gen){
@@ -235,6 +232,7 @@ public class MainMenu implements Screen {
 		buttonAtlas_gen.dispose();
 		skin_gen.dispose();
 		backgroundTexture.dispose();
+		dialogBackground.dispose();
 	}
 
 

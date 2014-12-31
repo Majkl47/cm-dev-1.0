@@ -50,12 +50,6 @@ public class MyColor extends Color {
 		return -2;
 	}
 	
-//	public Color mixer(Color c1, Color c2) {
-//		if ((c1 == MyColor.BLUE && c2 == MyColor.RED) || (c1 == MyColor.RED && c2 == MyColor.BLUE)) return MyColor.MAGENTA;
-//		if ((c1 == MyColor.BLUE && c2 == MyColor.GREEN) || (c1 == MyColor.GREEN && c2 == MyColor.BLUE)) return MyColor.CYAN;
-//		if ((c1 == MyColor.YELLOW && c2 == MyColor.RED) || (c1 == MyColor.RED && c2 == MyColor.YELLOW)) return MyColor.ORANGE;
-//		return c1;
-//	}
 	
 	public int mixer(int c1, int c2) {
 		Color cl1 = toColor(c1), cl2 = toColor(c2);

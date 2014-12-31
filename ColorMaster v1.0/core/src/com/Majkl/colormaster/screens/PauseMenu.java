@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class PauseMenu {
 	
+	//Dimensions Shortcuts
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
 	
@@ -50,6 +51,8 @@ public class PauseMenu {
 		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
 		buttonStyle_gen.font = font_gen;
 		
+		
+		//BUTTON RESUME DECLARATION
 		buttonResume = new MyButton("RESUME", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 3);
 		buttonResume.addListener(new InputListener() {
 			@Override
@@ -67,6 +70,8 @@ public class PauseMenu {
 		});
 		stage.addActor(buttonResume);
 		
+		
+		//BUTTON RESTART DECLARATION
 		buttonRestart = new MyButton("RESTART", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 4.5f);
 		buttonRestart.addListener(new InputListener() {
 			@Override
@@ -84,6 +89,8 @@ public class PauseMenu {
 		});
 		stage.addActor(buttonRestart);
 		
+		
+		//BUTTON SELECT LEVEL DECLARATION
 		buttonLevels = new MyButton("SELECT LEVEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 6);
 		buttonLevels.addListener(new InputListener() {
 			@Override
@@ -101,6 +108,8 @@ public class PauseMenu {
 		});
 		stage.addActor(buttonLevels);
 		
+		
+		//BUTTON MENU DECLARATION
 		buttonMenu = new MyButton("MENU", buttonStyle_gen, W / 12, H / 8, 10, H - ((H / 8) + 10));
 		buttonMenu.addListener(new InputListener() {
 			@Override
@@ -124,12 +133,15 @@ public class PauseMenu {
 	public void render() {
 		Gdx.input.setInputProcessor(stage);
 		
+		//BACK KEY functionality
 		if (Gdx.input.isKeyPressed(Keys.BACK) && GameScreen.isBackKeyReleased()) {
 			eventCode = 1;
 			GameScreen.setPauseBackKeyPressed(true);
 			setOpen(false);
 		}
 		
+		
+		//FADE OUT effect
 		ShapeRenderer render = new ShapeRenderer();
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		render.begin(ShapeType.Filled);
@@ -138,6 +150,7 @@ public class PauseMenu {
 		render.end();
 
 		Gdx.gl20.glDisable(GL20.GL_BLEND);
+		
 		
 		stage.act();
 		stage.draw();

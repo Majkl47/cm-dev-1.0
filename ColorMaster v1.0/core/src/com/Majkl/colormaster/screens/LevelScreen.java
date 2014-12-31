@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class LevelScreen implements Screen {
 
+	//Dimensions Shortcuts
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
 	
@@ -65,65 +66,42 @@ public class LevelScreen implements Screen {
 		
 		gameScreen.setRestart(true);
 		
-		/**
-		 * BUTTON MENU DECLARATION
-		 */
-		buttonMenu = new MyButton("MENU", buttonStyle_gen, W / 12, H / 8, 10, H - ((H / 8) + 10));
-		
+		//BUTTON MENU DECLARATION
+		buttonMenu = new MyButton("MENU", buttonStyle_gen, W / 12, H / 8, 10, H - ((H / 8) + 10));	
 		stage.addActor(buttonMenu);
-		
 		buttonMenu.addListener(new MyScreenListener(buttonMenu, game, mainMenu));
 		
 	
-		/**
-		 * BUTTON 1. LEVEL DECLARATION
-		 */
+		//BUTTON 1. LEVEL DECLARATION
 		button1= new MyButton("1", buttonStyle_gen,H / 8, H / 8, GameScreen.START_X, H - (H * 5) / 16);
-		
 		stage.addActor(button1);
-		
-		
 		button1.addListener(new MyListener(button1, game, gameScreen, true, 1));
 		
-		/**
-		 * BUTTON 2. LEVEL DECLARATION
-		 */
-
-		button2 = new MyButton("2", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) / 16, H - (H * 5) / 16);
-
-		stage.addActor(button2);
-				
-		button2.addListener(new MyListener(button2, game, gameScreen, true, 2));
 		
+		//BUTTON 2. LEVEL DECLARATION
+		button2 = new MyButton("2", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) / 16, H - (H * 5) / 16);
+		stage.addActor(button2);
+		button2.addListener(new MyListener(button2, game, gameScreen, true, 2));
 		if(MainMenu.getMaxLevel() >= 2) button2.setVisible(true);
 		else button2.setVisible(false);
 		
-		/**
-		 * BUTTON 3. LEVEL DECLARATION
-		 */
-
-		button3 = new MyButton("3", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 2 / 16, H - (H * 5) / 16);
-
-		stage.addActor(button3);
-				
-		button3.addListener(new MyListener(button3, game, gameScreen, true, 3));
 		
+		//BUTTON 3. LEVEL DECLARATION
+		button3 = new MyButton("3", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 2 / 16, H - (H * 5) / 16);
+		stage.addActor(button3);
+		button3.addListener(new MyListener(button3, game, gameScreen, true, 3));
 		if(MainMenu.getMaxLevel() >= 3) button3.setVisible(true);
 		else button3.setVisible(false);
 		
-		/**
-		 * BUTTON 4. LEVEL DECLARATION
-		 */
-
-		button4 = new MyButton("4", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 3 / 16, H - (H * 5) / 16);
-
-		stage.addActor(button4);
-				
-		button4.addListener(new MyListener(button4, game, gameScreen, true, 4));
 		
+		//BUTTON 4. LEVEL DECLARATION
+		button4 = new MyButton("4", buttonStyle_gen, H / 8, H / 8, GameScreen.START_X + (H * 3) * 3 / 16, H - (H * 5) / 16);
+		stage.addActor(button4);
+		button4.addListener(new MyListener(button4, game, gameScreen, true, 4));
 		if(MainMenu.getMaxLevel() >= 4) button4.setVisible(true);
 		else button4.setVisible(false);
 		
+		//Input processor change
 		Gdx.input.setInputProcessor(stage);
 		
 	}

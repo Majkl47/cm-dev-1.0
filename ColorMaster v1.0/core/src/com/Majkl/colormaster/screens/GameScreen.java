@@ -27,8 +27,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class GameScreen implements Screen {
 	
+	//Dimensions Shortcuts
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
+	
+	//START POSITION
 	public static final int START_X = W / 8; 
 	public static final int START_Y = H / 8;
 	
@@ -100,6 +103,7 @@ public class GameScreen implements Screen {
 		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
 		buttonStyle_gen.font = font_gen;
 		
+		//BUTTON PAUSE DECLARATION
 		buttonPause = new MyButton("PAUSE", buttonStyle_gen, W / 12,H / 8, 10, H - ((H / 8) + 10));
 		buttonPause.addListener(new InputListener() {
 			@Override
@@ -123,7 +127,7 @@ public class GameScreen implements Screen {
 		tempItems = saves.loadGame();
 		
 
-		
+		//Initializing items from saves or default values
 		if(tempItems == null) {
 			currentItems = levels.select(1);
 			computeGameplan();
@@ -163,6 +167,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
+		//Input processor change
 		plex = new InputMultiplexer();
 		plex.addProcessor(stage);
 		plex.addProcessor(processor);
@@ -175,22 +180,21 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		
+		//BACK KEY functionality
 		if (Gdx.input.isKeyPressed(Keys.BACK) && !backKeyPressed && !pauseBackKeyPressed && !pauseMenu.isOpen()) {
 			backKeyReleased = false;
 			backKeyPressed = true;
 			pauseMenu.setOpen(true);
 		} 
-		
 		if ((pauseMenu.isOpen() || backKeyPressed) && !Gdx.input.isKeyPressed(Keys.BACK)) {
 			backKeyReleased = true;
 		} 
-		
 		if (pauseBackKeyPressed && !Gdx.input.isKeyPressed(Keys.BACK)) {
 			pauseBackKeyPressed = false;
 		}
 		
 		
+		//ARRIVING TO THE FINISH
 		if ((currentItems.getPlayerPosition().x - START_X) / fieldLength == currentItems.getValuePosition(4).x &&
 				(currentItems.getPlayerPosition().y - START_Y) / fieldLength == currentItems.getValuePosition(4).y) {
 			MainMenu.setCurrentLevel(MainMenu.getCurrentLevel() + 1);
@@ -232,11 +236,13 @@ public class GameScreen implements Screen {
 		positionX = (int) (processor.getPosition().x  - START_X) / fieldLength;
 		positionY = (int)(processor.getPosition().y  - START_Y) / fieldLength;
 	
+		//Movement basics
 		if (positionX < 0 || positionY < 0 
 				|| positionX > currentItems.getWidth() - 1 
 				|| positionY > currentItems.getHeight() - 1) {
 			processor.positionReadjust();
 		} else {
+			//Interactions with objects
 			switch (currentItems.getGameMapValue(positionX, positionY)) {
 			case -1:
 				processor.positionReadjust();
@@ -269,8 +275,8 @@ public class GameScreen implements Screen {
 		currentItems.setPlayerPosition(processor.getPosition());
 		
 				
+		//Drawing the game
 		batch.begin();
-
 		for(int i = 0; i < currentItems.getWidth(); i++) {
 			for (int j = 0; j < currentItems.getHeight(); j++) {
 				if (currentItems.getGameMapValue(i, j) > (-1)) {
@@ -298,13 +304,13 @@ public class GameScreen implements Screen {
 					}
 				}
 			}
-		}
-		
-		
+		}	
 		batch.setColor(color.toColor(currentItems.getPlayerColor()));
 		batch.draw(player, currentItems.getPlayerPosition().x, currentItems.getPlayerPosition().y, fieldLength, fieldLength);
 		batch.end();
 		
+		
+		//Pause menu switch functionality
 		if (pauseMenu.isOpen()) {
 			pauseMenu.render();
 		} else {
@@ -320,7 +326,6 @@ public class GameScreen implements Screen {
 				break;
 			case 3:
 				game.setScreen(levelScreen);
-
 				try {
 					saves.saveGame(currentItems);
 				} catch (IOException e1) {

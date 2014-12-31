@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class EndScreen implements Screen {
 	
+	//Dimensions Shortcuts
 	public static final int W = Gdx.graphics.getWidth();
 	public static final int H = Gdx.graphics.getHeight();
 
