@@ -1,0 +1,3 @@
+- Refactored buttons
+- Deleted class MyButton
+- Created class ButtonCreator, which makes a new button with method newButton(String name, float width, float height, float Xposition, float Yposition)

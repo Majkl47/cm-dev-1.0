@@ -2,9 +2,9 @@ package com.Majkl.colormaster.screens;
 
 import java.io.IOException;
 
+import com.Majkl.colormaster.utils.ButtonCreator;
 import com.Majkl.colormaster.utils.Items;
 import com.Majkl.colormaster.utils.Levels;
-import com.Majkl.colormaster.utils.MyButton;
 import com.Majkl.colormaster.utils.MyColor;
 import com.Majkl.colormaster.utils.MyInputProcessor;
 import com.Majkl.colormaster.utils.Saves;
@@ -15,15 +15,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GameScreen implements Screen {
 	
@@ -61,11 +58,8 @@ public class GameScreen implements Screen {
 	private Vector2 position;
 	private int positionX, positionY;
 	
-	private TextureAtlas buttonAtlas_gen;
-	private Skin skin_gen;
-	private BitmapFont font_gen;
-	private TextButtonStyle buttonStyle_gen;
-	private MyButton buttonPause;
+	private ButtonCreator buttonCreator;
+	private TextButton buttonPause;
 
 	
 	public GameScreen(Game game) {
@@ -92,19 +86,11 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 		color = new MyColor();
 		stage = new Stage();
-		
-		buttonAtlas_gen = new TextureAtlas("buttons/buttons.pack");
-		skin_gen = new Skin();
-		skin_gen.addRegions(buttonAtlas_gen);
-		font_gen = new BitmapFont(Gdx.files.internal("fonts/algeran.fnt"), false);
-		
-		buttonStyle_gen = new TextButtonStyle();	
-		buttonStyle_gen.up = skin_gen.getDrawable("button");
-		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
-		buttonStyle_gen.font = font_gen;
+		buttonCreator = new ButtonCreator();
+
 		
 		//BUTTON PAUSE DECLARATION
-		buttonPause = new MyButton("PAUSE", buttonStyle_gen, W / 12,H / 8, 10, H - ((H / 8) + 10));
+		buttonPause = buttonCreator.newButton("PAUSE", W / 12,H / 8, 10, H - ((H / 8) + 10));
 		buttonPause.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -119,7 +105,7 @@ public class GameScreen implements Screen {
 			}
 		});
 		stage.addActor(buttonPause);
-		
+				
 
 		levels = new Levels();
 		saves = new Saves();
@@ -376,6 +362,8 @@ public class GameScreen implements Screen {
 		drop.dispose();
 		finish.dispose();
 		batch.dispose();
+		stage.dispose();
+		buttonCreator.dispose();
 	}
 	
 	public void computeGameplan() {

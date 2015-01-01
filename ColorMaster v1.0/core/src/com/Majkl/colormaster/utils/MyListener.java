@@ -6,17 +6,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class MyListener extends InputListener {
 
-	private MyButton button;
+	private TextButton button;
 	private Game game;
 	private Screen screen;
 	private boolean setLevel;
 	private int currentLevel;
 	
 	
-	public MyListener(MyButton button, Game game, Screen screen, boolean setLevel, int currentLevel) {
+	public MyListener(TextButton button, Game game, Screen screen, boolean setLevel, int currentLevel) {
 		this.button = button;
 		this.game = game;
 		this.screen = screen;

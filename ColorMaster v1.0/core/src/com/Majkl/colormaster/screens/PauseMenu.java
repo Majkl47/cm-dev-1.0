@@ -1,18 +1,15 @@
 package com.Majkl.colormaster.screens;
 
-import com.Majkl.colormaster.utils.MyButton;
+import com.Majkl.colormaster.utils.ButtonCreator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 
 public class PauseMenu {
@@ -27,12 +24,9 @@ public class PauseMenu {
 	
 	private int eventCode;
 	
-	private TextureAtlas buttonAtlas_gen;
-	private Skin skin_gen;
-	private BitmapFont font_gen;
-	private TextButtonStyle buttonStyle_gen;
 	private Stage stage;
-	private MyButton buttonResume, buttonRestart, buttonLevels, buttonMenu;
+	private ButtonCreator buttonCreator;
+	private TextButton buttonResume, buttonRestart, buttonLevels, buttonMenu;
 	
 	
 		
@@ -40,20 +34,12 @@ public class PauseMenu {
 	public PauseMenu() {
 		called = true;
 		
-		buttonAtlas_gen = new TextureAtlas("buttons/buttons.pack");
-		skin_gen = new Skin();
-		skin_gen.addRegions(buttonAtlas_gen);
-		font_gen = new BitmapFont(Gdx.files.internal("fonts/algeran.fnt"), false);
 		stage = new Stage();
-		
-		buttonStyle_gen = new TextButtonStyle();	
-		buttonStyle_gen.up = skin_gen.getDrawable("button");
-		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
-		buttonStyle_gen.font = font_gen;
+		buttonCreator = new ButtonCreator();
 		
 		
 		//BUTTON RESUME DECLARATION
-		buttonResume = new MyButton("RESUME", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 3);
+		buttonResume = buttonCreator.newButton("RESUME", W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 3);
 		buttonResume.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -72,7 +58,7 @@ public class PauseMenu {
 		
 		
 		//BUTTON RESTART DECLARATION
-		buttonRestart = new MyButton("RESTART", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 4.5f);
+		buttonRestart = buttonCreator.newButton("RESTART", W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 4.5f);
 		buttonRestart.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -91,7 +77,7 @@ public class PauseMenu {
 		
 		
 		//BUTTON SELECT LEVEL DECLARATION
-		buttonLevels = new MyButton("SELECT LEVEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 6);
+		buttonLevels = buttonCreator.newButton("SELECT LEVEL", W / 3.5f, H / 8, (W / 2) - (W / 7), H - (H / 8) * 6);
 		buttonLevels.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -110,7 +96,7 @@ public class PauseMenu {
 		
 		
 		//BUTTON MENU DECLARATION
-		buttonMenu = new MyButton("MENU", buttonStyle_gen, W / 12, H / 8, 10, H - ((H / 8) + 10));
+		buttonMenu = buttonCreator.newButton("MENU", W / 12, H / 8, 10, H - ((H / 8) + 10));
 		buttonMenu.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -157,10 +143,8 @@ public class PauseMenu {
 	}
 	
 	public void dispose() {
-		buttonAtlas_gen.dispose();
-		skin_gen.dispose();
-		font_gen.dispose();
 		stage.dispose();
+		buttonCreator.dispose();
 	}
 	
 	

@@ -1,27 +1,26 @@
 package com.Majkl.colormaster.screens;
 
-import com.Majkl.colormaster.utils.MyButton;
+import com.Majkl.colormaster.utils.ButtonCreator;
 import com.Majkl.colormaster.utils.MyScreenListener;
 import com.Majkl.colormaster.utils.Saves;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 
 public class MainMenu implements Screen {
@@ -40,18 +39,13 @@ public class MainMenu implements Screen {
 	
 	private GameScreen gameScreen;
 	private LevelScreen levelScreen;
-	
-	private Image background;
-	
+		
 	private Stage stage;
-	
-	private TextureAtlas buttonAtlas_gen;
-	private Skin skin_gen;
-	private BitmapFont font_gen;
-	private TextButtonStyle buttonStyle_gen;
+	private ButtonCreator buttonCreator;
+	private Skin skin;
 	private Texture backgroundTexture, dialogBackground; 
-	private MyButton buttonContinue, buttonNewGame, buttonLevels, buttonDel;
-	private Image dialogImage;
+	private TextButton buttonContinue, buttonNewGame, buttonLevels, buttonDel;
+	private Image background, dialogImage;
 	
 	
 	public MainMenu(Game game) {
@@ -80,54 +74,34 @@ public class MainMenu implements Screen {
 		background.toBack();
 		background.setSize(W , H);
 		
-		buttonAtlas_gen = new TextureAtlas("buttons/buttons.pack");
-		skin_gen = new Skin();
-		skin_gen.addRegions(buttonAtlas_gen);
-
-		font_gen = new BitmapFont(Gdx.files.internal("fonts/algeran.fnt"), false);
-		BitmapFont dialogFont = new BitmapFont(Gdx.files.internal("fonts/dialog.fnt"));
-
+		buttonCreator = new ButtonCreator();
 		
-		buttonStyle_gen = new TextButtonStyle();	
-		buttonStyle_gen.up = skin_gen.getDrawable("button");
-		buttonStyle_gen.down = skin_gen.getDrawable("button_flipped");
-		buttonStyle_gen.font = font_gen;
-		
-		skin_gen.add("default",  new WindowStyle(dialogFont, Color.GREEN, dialogImage.getDrawable()));
-		skin_gen.add("default", new LabelStyle(dialogFont, Color.BLUE));
-		skin_gen.add("default", buttonStyle_gen);
+		BitmapFont dialogFont = new BitmapFont(Gdx.files.internal("fonts/dialog.fnt"));		
+		skin = buttonCreator.getSkin(); 
+		skin.add("default",  new WindowStyle(dialogFont, Color.GREEN, dialogImage.getDrawable()));
+		skin.add("default", new LabelStyle(dialogFont, Color.BLUE));
+		buttonCreator.setSkin(skin);
+		skin.add("default", buttonCreator.getStyle());
 		
 		//BUTTON CONTINUE DECLARATION
-		buttonContinue = new MyButton("CONTINUE", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - (W / 7), H -  (H / 8) * 4);
-		
-		stage.addActor(buttonContinue);
-		
+		buttonContinue = buttonCreator.newButton("CONTINUE", W / 3.5f, H / 8, (W / 2) - (W / 7), H -  (H / 8) * 4);
 		buttonContinue.addListener(new MyScreenListener(buttonContinue, game, gameScreen));
-		
-	
+		stage.addActor(buttonContinue);
+
 		//BUTTON NEW GAME DECLARATION
-		buttonNewGame = new MyButton("NEW GAME", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 4);
-		
-		stage.addActor(buttonNewGame);
-		
+		buttonNewGame = buttonCreator.newButton("NEW GAME", W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 4);
 		buttonNewGame.addListener(new MyScreenListener(buttonNewGame, game, gameScreen));
-	
-		
+		stage.addActor(buttonNewGame);
+
 		//BUTTON SELECT LEVEL DECLARATION
-		buttonLevels = new MyButton("SELECT LEVEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 5.5f);
-		
-		stage.addActor(buttonLevels);
-				
+		buttonLevels = buttonCreator.newButton("SELECT LEVEL", W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 5.5f);
 		buttonLevels.addListener(new MyScreenListener(buttonLevels, game, levelScreen));
-		
-	
+		stage.addActor(buttonLevels);
+
 		//BUTTON DEL
 		//for testing purposes
 		//it will erase file "data.dat"
-			buttonDel = new MyButton("DEL", buttonStyle_gen, W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 7);
-		
-		stage.addActor(buttonDel);
-		
+		buttonDel = buttonCreator.newButton("DEL", W / 3.5f, H / 8, (W / 2) - ( W / 7), H -  (H / 8) * 7);
 		buttonDel.addListener(new InputListener(){
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -148,7 +122,10 @@ public class MainMenu implements Screen {
 			}
 		});
 	
+		stage.addActor(buttonDel);
+		
 		Gdx.input.setInputProcessor(stage);
+
 	}
 
 	@Override
@@ -175,7 +152,7 @@ public class MainMenu implements Screen {
 			//Dialog Window implementation
 		if(Gdx.input.isKeyPressed(Input.Keys.BACK) && !backKeyPressed && !LevelScreen.isBackKeyPressed()){
 			backKeyPressed = true;
-			new Dialog("CONFIRM EXIT", skin_gen){
+			new Dialog("CONFIRM EXIT", skin){
 				{
 					background.setColor(background.getColor().r, background.getColor().g, background.getColor().b, 0.2f);
 					text("DO YOU REALLY WANT TO QUIT?");
@@ -229,8 +206,8 @@ public class MainMenu implements Screen {
 		if (gameScreen.isCalled()) gameScreen.dispose();
 		if (levelScreen.isCalled()) levelScreen.dispose();
 		stage.dispose();
-		buttonAtlas_gen.dispose();
-		skin_gen.dispose();
+		skin.dispose();
+		buttonCreator.dispose();
 		backgroundTexture.dispose();
 		dialogBackground.dispose();
 	}
